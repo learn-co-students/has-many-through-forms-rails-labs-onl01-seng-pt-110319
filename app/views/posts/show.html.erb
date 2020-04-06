@@ -1,1 +1,38 @@
-
+<h1><%= @post.title.titlecase %></h1><br>
+<h3> Post details</h3>
+<p>Post Content: <%= @post.content %></p><br>
+<br>
+<% @post.categories.each do |cate| %>
+    <p>Post Categories: <%= cate.name.capitalize %></p><br>
+<% end %>
+<br>
+<% @post.comments.each do |comment| %>
+    <p>Post from <%= comment.user.username %> says: <%= comment.content %></p><br>
+<% end %>
+<br>
+<h3>Users Who Commented On This Post:<h3>
+<% @post.users.uniq.each do |user| %>
+    <ul>
+        <li><%= link_to user.username, user_path(user) %></li>
+    </ul>
+<% end %>
+<br>
+<%= form_for @post.comments.build do |f| %>
+    <%= f.hidden_field :post_id, value: @post.id %>
+    <ul>
+        <li><%= f.label :content, "Enter a New Comment:" %></li<br>
+        <li><%= f.text_area :content %></li><br>
+        <br>
+    <h3>Select A User</h3><br>
+        <li><%= f.collection_select(:user_id, User.all, :id, :username) %></li><br>
+        <br> 
+    <h3>Or Create One</h3><br>
+    <br>
+    <ul>
+        <%= f.fields_for :user, User.new do |user_fields| %>
+            <li><%= user_fields.label :username, "Enter A Username:" %></li><br>
+            <li><%= user_fields.text_field :username %></li><br>
+        <% end %>
+    </ul>
+    <%= f.submit %>
+<% end %>
