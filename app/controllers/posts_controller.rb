@@ -1,6 +1,10 @@
 class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
+    @post_categories = @post.categories.sort_by(&:name)
+    @post_comments = @post.comments
+    @comentators = @post.users.uniq.sort_by(&:username)
+    @users= User.all
   end
 
   def index
@@ -9,6 +13,7 @@ class PostsController < ApplicationController
 
   def new
     @post = Post.new
+    @categories = Category.all.sort_by(&:name)
   end
 
   def create
